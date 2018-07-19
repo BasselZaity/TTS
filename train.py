@@ -26,7 +26,7 @@ from utils.model import get_param_size
 from utils.visual import plot_alignment, plot_spectrogram
 from datasets.LJSpeech import LJSpeechDataset
 from models.tacotron import Tacotron
-from layers.losses import L1LossMasked
+# from layers.losses import L1LossMasked
 
 torch.manual_seed(1)
 use_cuda = torch.cuda.is_available()
@@ -283,7 +283,7 @@ def evaluate(model, criterion, criterion_st, data_loader, current_step):
             #                                    ('linear_loss', linear_loss.item()),
             #                                    ('mel_loss', mel_loss.item()),
             #                                    ('stop_loss', stop_loss.item())])
-            if current_step % c.print_step == 0:
+            if num_iter % c.print_step == 0:
                 print(" | | > TotalLoss: {:.5f}   LinearLoss: {:.5f}   MelLoss:{:.5f}  "\
                       "StopLoss: {:.5f}  ".format(loss.item(),
                                                           linear_loss.item(),
@@ -388,7 +388,8 @@ def main(args):
     optimizer = optim.Adam(model.parameters(), lr=c.lr)
     optimizer_st = optim.Adam(model.decoder.stopnet.parameters(), lr=c.lr)
 
-    criterion = L1LossMasked()
+    # criterion = L1LossMasked()
+    criterion = nn.L1Loss()
     criterion_st = nn.BCELoss()
 
     if args.restore_path:
