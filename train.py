@@ -107,11 +107,10 @@ def train(model, criterion, criterion_st, data_loader, optimizer, optimizer_st, 
 
         # loss computation
         stop_loss = criterion_st(stop_tokens, stop_targets)
-        mel_loss = criterion(mel_output, mel_input, mel_lengths)
-        linear_loss = 0.5 * criterion(linear_output, linear_input, mel_lengths) \
+        mel_loss = criterion(mel_output, mel_input)
+        linear_loss = 0.5 * criterion(linear_output, linear_input) \
             + 0.5 * criterion(linear_output[:, :, :n_priority_freq],
-                              linear_input[:, :, :n_priority_freq],
-                              mel_lengths)
+                              linear_input[:, :, :n_priority_freq])
         loss = mel_loss + linear_loss
 
         # backpass and check the grad norm for spec losses
@@ -268,11 +267,10 @@ def evaluate(model, criterion, criterion_st, data_loader, current_step):
 
             # loss computation
             stop_loss = criterion_st(stop_tokens, stop_targets)
-            mel_loss = criterion(mel_output, mel_input, mel_lengths)
-            linear_loss = 0.5 * criterion(linear_output, linear_input, mel_lengths) \
+            mel_loss = criterion(mel_output, mel_input)
+            linear_loss = 0.5 * criterion(linear_output, linear_input) \
                 + 0.5 * criterion(linear_output[:, :, :n_priority_freq],
-                                  linear_input[:, :, :n_priority_freq],
-                                  mel_lengths)
+                                  linear_input[:, :, :n_priority_freq])
             loss = mel_loss + linear_loss + stop_loss
 
             step_time = time.time() - start_time
